@@ -1,0 +1,19 @@
+{
+  "name": "intel-8th",
+  "version": "1.0.0",
+  "description": "Intel 8th Generation",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "node src/test.js"
+  },
+  "author": "isobar",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "fs-extra": "^7.0.0",
+    "morgan": "^1.9.0",
+    "replace": "^1.0.0"
+  }
+}
