@@ -25,12 +25,21 @@ text1=$data/text1.ts
 text2=$data/text2.ts
 text3=$data/text3.ts
 end=$data/end.ts
+
+base0=$data/base-000.ts
+base1=$data/base-001.ts
+base2=$data/base-002.ts
+base3=$data/base-003.ts
+base4=$data/base-004.ts
+base5=$data/base-005.ts
+base6=$data/base-006.ts
+
 uts0=$sno/out-1-000.ts
 uts1=$sno/out-1-001.ts
 uts2=$sno/out-2-000.ts
 uts3=$sno/out-2-001.ts
 
-concat_params1="concat:$intro|$uts0|$text1|$uts1|$text2|$uts2|$text3|$uts3|$end"
+concat_params1="concat:$intro|$base0|$base1|$uts0|$text1|$base2|$base3|$uts1|$uts2|$text2|$base4|$base5|$uts3|$base6|$end"
 concat_params2="concat:$intro|$uts0|$text1|$uts1|$text2|$uts2|$text3|$uts3|$end"
 concat_params3="concat:$intro|$uts0|$text1|$uts1|$text2|$uts2|$text3|$uts3|$end"
 concat_params4="concat:$intro|$uts0|$text1|$uts1|$text2|$uts2|$text3|$uts3|$end"
