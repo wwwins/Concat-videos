@@ -14,6 +14,7 @@ const fse = require('fs-extra');
 
 const HOST = process.env.HOST
 const PORT = (process.env.PORT || 8080)
+const APP_HOME = process.env.APP_HOME
 
 const { spawn } = require('child_process');
 
@@ -44,7 +45,7 @@ async function initUserData(sno,num) {
     if (exists) {
       console.log('>>>>>success');
       console.log('>>>>>starting spawn generator.sh');
-      const generator = spawn('sh', ['/home/user01/intel-8th/tools/generator.sh', sno, 'pic']);
+      const generator = spawn('bash', [APP_HOME+'tools/generator.sh', sno, 'pic']);
       generator.stdout.on('data', (data) => {
         console.log('stdout:'+data);
       })
@@ -61,6 +62,27 @@ async function initUserData(sno,num) {
   } catch (err) {
     console.log(err);
   }
+}
+
+async function uploadVideo(email,sno) {
+  console.log('>>>>>uploadVideo:',email,sno);
+  const src = 'public/'+sno+'/output.mp4';
+  try {
+    const uploader = spawn('sh', [APP_HOME+'tools/uploader.sh', email, sno]);
+    uploader.stdout.on('data', (data) => {
+      console.log('stdout:'+data);
+    })
+    uploader.stderr.on('data', (data) => {
+      console.log('stderr:'+data);
+    })
+    uploader.on('close', (code) => {
+      console.log('child process exited with code '+code);
+    })
+
+  } catch (err) {
+    console.log(err);
+  }
+
 }
 
 /*
@@ -83,6 +105,7 @@ app.get('/finish/:userId/:fileid', (req, res) => {
 app.get('/form/:email/:sno', (req, res) => {
   res.send('email:'+req.params.email+' '+req.params.sno);
   console.log('>>>email:'+req.params.email+' sno:'+req.params.sno);
+  uploadVideo(req.params.email, req.params.sno);
 })
 
 app.get('/start/:userId', (req, res) => {
