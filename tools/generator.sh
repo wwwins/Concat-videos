@@ -13,6 +13,7 @@ if [ -z "$1" ]
     exit 1
 fi
 
+FFMPEG="ffmpeg -loglevel warning"
 project=~/intel-8th/
 data=${project}data
 fps=1/2
@@ -66,7 +67,7 @@ rawoutput=$sno/output.264
 anoutput=$sno/voutput.mp4
 output=$sno/output.mp4
 
-echo '>>>>>PARAMS:'$src1 $src2 $dst1 $dst2 $seg1 $seg2 fps=$fps
+echo '>>>>>PARAMS:'$src1 $src2 $dst1 $dst2 $seg1 $seg2 fps=$fps ${!concat_params}
 
 # create folder
 cd ${project}public/
@@ -76,12 +77,12 @@ mkdir $sno
 #ffmpeg -i $src2 -c copy -f h264 -y $raw2
 # capture frames
 echo ">>>>>FRAMES"
-ffmpeg -hide_banner -i $raw1 -vf fps=$fps -y $dst1
-ffmpeg -hide_banner -i $raw2 -vf fps=$fps -y $dst2
+$FFMPEG -i $raw1 -vf fps=$fps -y $dst1
+$FFMPEG -i $raw2 -vf fps=$fps -y $dst2
 # segment videos
 echo ">>>>>SEGMENT"
-ffmpeg -hide_banner -i $raw1 -segment_time 2 -g 60 -sc_threshold 0 -force_key_frames "expr:gte(t,n_forced*60)" -f segment -preset veryfast $seg1
-ffmpeg -hide_banner -i $raw2 -segment_time 2 -g 60 -sc_threshold 0 -force_key_frames "expr:gte(t,n_forced*60)" -f segment -preset veryfast $seg2
+$FFMPEG -i $raw1 -segment_time 2 -g 60 -sc_threshold 0 -force_key_frames "expr:gte(t,n_forced*60)" -f segment -preset veryfast $seg1
+$FFMPEG -i $raw2 -segment_time 2 -g 60 -sc_threshold 0 -force_key_frames "expr:gte(t,n_forced*60)" -f segment -preset veryfast $seg2
 
 # create video list
 #cp $data/list1 $list
@@ -93,12 +94,12 @@ ffmpeg -hide_banner -i $raw2 -segment_time 2 -g 60 -sc_threshold 0 -force_key_fr
 echo ">>>>>CONVERT TS"
 for f in $sno/out-*.mp4
 do
-  ffmpeg -hide_banner -i $f -c copy -bsf:v h264_mp4toannexb -an -f mpegts -y ${f%%.*}.ts
+  $FFMPEG -i $f -c copy -bsf:v h264_mp4toannexb -an -f mpegts -y ${f%%.*}.ts
 done
 # merge video and audio
 echo ">>>>>MERGE VIDEO"
-ffmpeg -hide_banner -i ${!concat_params} -c copy -y $anoutput
+$FFMPEG -i ${!concat_params} -c copy -y $anoutput
 echo ">>>>>MERGE AUDIO"
-ffmpeg -hide_banner -i $anoutput -i $audio -c copy -y $output
+$FFMPEG -i $anoutput -i $audio -c copy -y $output
 
 echo 'done!!'
